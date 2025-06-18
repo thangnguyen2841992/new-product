@@ -12,7 +12,6 @@ public class TopicPostServiceImpl implements ITopicPostService{
     @Autowired
     private ITopicPostRepository topicPostRepository;
 
-
     @Override
     public List<TopicPost> getTopicPosts() {
         return topicPostRepository.findAll();

@@ -18,4 +18,28 @@ public class Image {
 
     @ManyToOne
     private Post post;
+
+    public Long getImageId() {
+        return imageId;
+    }
+
+    public void setImageId(Long imageId) {
+        this.imageId = imageId;
+    }
+
+    public String getImageName() {
+        return imageName;
+    }
+
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
+    }
+
+    public Post getPost() {
+        return post;
+    }
+
+    public void setPost(Post post) {
+        this.post = post;
+    }
 }

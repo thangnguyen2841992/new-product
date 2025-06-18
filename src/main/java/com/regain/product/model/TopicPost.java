@@ -11,11 +11,26 @@ import lombok.NoArgsConstructor;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
 public class TopicPost {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private  Long topicPostId;
 
     private String name;
+
+    public Long getTopicPostId() {
+        return topicPostId;
+    }
+
+    public void setTopicPostId(Long topicPostId) {
+        this.topicPostId = topicPostId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }

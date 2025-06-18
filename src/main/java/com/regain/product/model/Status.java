@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
 public class Status {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,4 +18,19 @@ public class Status {
 
     private String statusName;
 
+    public Long getStatusId() {
+        return statusId;
+    }
+
+    public void setStatusId(Long statusId) {
+        this.statusId = statusId;
+    }
+
+    public String getStatusName() {
+        return statusName;
+    }
+
+    public void setStatusName(String statusName) {
+        this.statusName = statusName;
+    }
 }
