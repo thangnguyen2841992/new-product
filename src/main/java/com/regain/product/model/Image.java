@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -14,10 +16,11 @@ public class Image {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long imageId;
 
-    private String imageName;
+    private String imageData;
 
-    @ManyToOne
-    private Post post;
+    private Long postId;
+
+    private Date dateCreated;
 
     public Long getImageId() {
         return imageId;
@@ -27,19 +30,27 @@ public class Image {
         this.imageId = imageId;
     }
 
-    public String getImageName() {
-        return imageName;
+    public String getImageData() {
+        return imageData;
     }
 
-    public void setImageName(String imageName) {
-        this.imageName = imageName;
+    public void setImageData(String imageData) {
+        this.imageData = imageData;
     }
 
-    public Post getPost() {
-        return post;
+    public Long getPostId() {
+        return postId;
     }
 
-    public void setPost(Post post) {
-        this.post = post;
+    public void setPostId(Long postId) {
+        this.postId = postId;
+    }
+
+    public Date getDateCreated() {
+        return dateCreated;
+    }
+
+    public void setDateCreated(Date dateCreated) {
+        this.dateCreated = dateCreated;
     }
 }

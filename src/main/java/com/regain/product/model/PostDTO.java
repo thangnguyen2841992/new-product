@@ -1,34 +1,26 @@
 package com.regain.product.model;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.security.auth.login.AccountException;
-import java.util.Date;
-
-@Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
-public class Post {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class PostDTO {
     private Long postId;
 
     private String title;
 
     private String content;
 
-    private Date dateCreated;
-
-    private Long userId;
+    private String dateCreated;
 
     private Long topicPostId;
 
-    private Long statusId;
+    private String topicPostName;
 
+    private Long statusPostId;
+
+    private String statusPostName;
 
     public Long getPostId() {
         return postId;
@@ -54,11 +46,11 @@ public class Post {
         this.content = content;
     }
 
-    public Date getDateCreated() {
+    public String getDateCreated() {
         return dateCreated;
     }
 
-    public void setDateCreated(Date dateCreated) {
+    public void setDateCreated(String dateCreated) {
         this.dateCreated = dateCreated;
     }
 
@@ -70,19 +62,27 @@ public class Post {
         this.topicPostId = topicPostId;
     }
 
-    public Long getStatusId() {
-        return statusId;
+    public String getTopicPostName() {
+        return topicPostName;
     }
 
-    public void setStatusId(Long statusId) {
-        this.statusId = statusId;
+    public void setTopicPostName(String topicPostName) {
+        this.topicPostName = topicPostName;
     }
 
-    public Long getUserId() {
-        return userId;
+    public Long getStatusPostId() {
+        return statusPostId;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setStatusPostId(Long statusPostId) {
+        this.statusPostId = statusPostId;
+    }
+
+    public String getStatusPostName() {
+        return statusPostName;
+    }
+
+    public void setStatusPostName(String statusPostName) {
+        this.statusPostName = statusPostName;
     }
 }
