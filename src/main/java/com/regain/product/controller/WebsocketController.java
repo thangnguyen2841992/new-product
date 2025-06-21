@@ -14,6 +14,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 @RestController
@@ -26,8 +30,8 @@ public class WebsocketController {
 
 
     @MessageMapping("/message")
-    @SendTo("/topic/messages")
-    public String sendMessage(@Payload String message) {
+    @SendTo("/topic/posts")
+    public PostRequest sendMessage(@Payload String message) {
         Post post = new Post();
         ObjectMapper objectMapper = new ObjectMapper();
         try {
@@ -47,11 +51,24 @@ public class WebsocketController {
                 image.setDateCreated(new Date());
                 this.imageService.saveImage(image);
             }
+            newPost.setPostId(newPostSave.getPostId());
+            // Chuyển đổi Date thành Instant
+//            Instant instant = newPostSave.getDateCreated().toInstant();
+
+            // Định dạng thời gian theo định dạng ISO 8601
+//            DateTimeFormatter formatter = DateTimeFormatter.ISO_INSTANT.withZone(ZoneId.of("UTC"));
+
+            // Chuyển đổi Instant thành String
+//            String formattedDate = formatter.format(instant);
+//            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+            newPost.setDateCreated(newPostSave.getDateCreated());
+            return newPost;
             // In ra thông tin đối tượng
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return message; // Echo the message back
+        return null;
+         // Echo the message back
     }
 
     @ExceptionHandler(Exception.class)

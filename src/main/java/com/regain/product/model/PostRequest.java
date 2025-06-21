@@ -3,15 +3,46 @@ package com.regain.product.model;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @AllArgsConstructor
 @NoArgsConstructor
 public class PostRequest {
+    private Long postId;
     private String content;
     private String title;
+    private String fullName;
+    private String avatar;
     private Long statusId;
     private Long accountId;
     private Long topicPostId;
+    private String topicPostName;
+    private Date dateCreated;
     private ImageRequest[] imageList;
+
+    public String getTopicPostName() {
+        return topicPostName;
+    }
+
+    public void setTopicPostName(String topicPostName) {
+        this.topicPostName = topicPostName;
+    }
+
+    public String getFullName() {return fullName;}
+
+    public void setFullName(String fullName) {this.fullName = fullName;}
+
+    public String getAvatar() {return avatar;}
+
+    public void setAvatar(String avatar) {this.avatar = avatar;}
+
+    public Long getPostId() {
+        return postId;
+    }
+
+    public void setPostId(Long postId) {
+        this.postId = postId;
+    }
 
     public String getContent() {
         return content;
@@ -59,5 +90,13 @@ public class PostRequest {
 
     public void setImageList(ImageRequest[] imageList) {
         this.imageList = imageList;
+    }
+
+    public Date getDateCreated() {
+        return dateCreated;
+    }
+
+    public void setDateCreated(Date dateCreated) {
+        this.dateCreated = dateCreated;
     }
 }
