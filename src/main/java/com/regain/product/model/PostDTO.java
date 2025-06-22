@@ -3,6 +3,8 @@ package com.regain.product.model;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @AllArgsConstructor
 @NoArgsConstructor
 public class PostDTO {
@@ -12,7 +14,7 @@ public class PostDTO {
 
     private String content;
 
-    private String dateCreated;
+    private Date dateCreated;
 
     private Long topicPostId;
 
@@ -21,6 +23,26 @@ public class PostDTO {
     private Long statusPostId;
 
     private String statusPostName;
+
+    private String fullName;
+
+    private String avatar;
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
 
     public Long getPostId() {
         return postId;
@@ -46,11 +68,11 @@ public class PostDTO {
         this.content = content;
     }
 
-    public String getDateCreated() {
+    public Date getDateCreated() {
         return dateCreated;
     }
 
-    public void setDateCreated(String dateCreated) {
+    public void setDateCreated(Date dateCreated) {
         this.dateCreated = dateCreated;
     }
 
