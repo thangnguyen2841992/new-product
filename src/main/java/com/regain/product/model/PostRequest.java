@@ -14,11 +14,20 @@ public class PostRequest {
     private String fullName;
     private String avatar;
     private Long statusId;
+    private String statusPostName;
     private Long accountId;
     private Long topicPostId;
     private String topicPostName;
     private Date dateCreated;
     private ImageRequest[] imageList;
+
+    public String getStatusPostName() {
+        return statusPostName;
+    }
+
+    public void setStatusPostName(String statusPostName) {
+        this.statusPostName = statusPostName;
+    }
 
     public String getTopicPostName() {
         return topicPostName;

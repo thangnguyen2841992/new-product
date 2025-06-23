@@ -14,4 +14,7 @@ public interface IPostRepository extends JpaRepository<Post, Long> {
 
     @Query(value = "Select * from post where user_id = :accountId order by date_created desc", nativeQuery = true)
     List<Post> findAllPostOfUser(@Param("accountId") Long accountId);
+
+    @Query(value = "Select * from post where user_id <> :accountId and status_id = 1 order by date_created desc", nativeQuery = true)
+    List<Post> findAllPostOfOtherUser(@Param("accountId") Long accountId);
 }

@@ -17,9 +17,15 @@ public class PostController {
     private IPostService postService;
 
 
-    @GetMapping("/{accountId}")
+    @GetMapping("/getAllPostsOfUser/{accountId}")
     public ResponseEntity<List<PostDTO>> getAllPost(@PathVariable Long accountId) {
        List<PostDTO> postDTOS = this.postService.getAllPostsOfUser(accountId);
+        return ResponseEntity.ok().body(postDTOS);
+    }
+
+    @GetMapping("/getAllPostsOfOtherUser/{accountId}")
+    public ResponseEntity<List<PostDTO>> getAllPostsOfOtherUser(@PathVariable Long accountId) {
+       List<PostDTO> postDTOS = this.postService.getAllPostsOfOtherUser(accountId);
         return ResponseEntity.ok().body(postDTOS);
     }
 }

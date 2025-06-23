@@ -8,6 +8,7 @@ import java.util.List;
 public interface IPostService {
 
     List<PostDTO> getAllPostsOfUser(Long accountId);
+    List<PostDTO> getAllPostsOfOtherUser(Long accountId);
 
 
     Post savePost(Post post);

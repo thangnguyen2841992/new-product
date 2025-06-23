@@ -5,6 +5,7 @@ import com.regain.product.model.*;
 import com.regain.product.repository.IPostRepository;
 import com.regain.product.repository.IStatusRepository;
 import com.regain.product.repository.ITopicPostRepository;
+import com.regain.product.repository.ImageRepository;
 import com.regain.product.service.status.IStatusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -28,10 +29,16 @@ public class PostServiceImpl implements IPostService {
     @Autowired
     private ITopicPostRepository topicPostRepository;
 
+    @Autowired
+    private ImageRepository imageRepository;
+
     @Override
     public List<PostDTO> getAllPostsOfUser(Long accountId) {
-        AccountDTO accountDTO = accountService.findAccountByAccountId(accountId).getBody();
         List<Post> posts = this.postRepository.findAllPostOfUser(accountId);
+        return mappingListPostToPostDTO(posts);
+    }
+
+    private List<PostDTO> mappingListPostToPostDTO(List<Post> posts) {
         List<PostDTO> postDTOs = new ArrayList<>();
         for (Post post : posts) {
             PostDTO postDTO = new PostDTO();
@@ -39,6 +46,7 @@ public class PostServiceImpl implements IPostService {
             postDTO.setStatusPostId(post.getStatusId());
             postDTO.setTitle(post.getTitle());
             postDTO.setContent(post.getContent());
+            AccountDTO accountDTO = accountService.findAccountByAccountId(post.getUserId()).getBody();
             assert accountDTO != null;
             postDTO.setAvatar(accountDTO.getAvatar());
             postDTO.setFullName(accountDTO.getFullName());
@@ -47,9 +55,17 @@ public class PostServiceImpl implements IPostService {
             postDTO.setStatusPostName(status.getStatusName());
             TopicPost topicPost = topicPostRepository.findById(post.getTopicPostId()).orElseThrow(() -> new RuntimeException("TopicPost Not Found " + post.getTopicPostId()));
             postDTO.setTopicPostName(topicPost.getName());
+            List<Image> images = this.imageRepository.findByPostId(post.getPostId());
+            postDTO.setImages(images);
             postDTOs.add(postDTO);
         }
         return postDTOs;
+    }
+
+    @Override
+    public List<PostDTO> getAllPostsOfOtherUser(Long accountId) {
+        List<Post> posts = this.postRepository.findAllPostOfOtherUser(accountId);
+        return mappingListPostToPostDTO(posts);
     }
 
     @Override
