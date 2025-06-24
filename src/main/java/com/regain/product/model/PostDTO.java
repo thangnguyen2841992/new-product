@@ -31,6 +31,26 @@ public class PostDTO {
 
     private List<Image> images;
 
+    private long totalLikes;
+
+    private long totalNotificationUnread;
+
+    public long getTotalNotificationUnread() {
+        return totalNotificationUnread;
+    }
+
+    public void setTotalNotificationUnread(long totalNotificationUnread) {
+        this.totalNotificationUnread = totalNotificationUnread;
+    }
+
+    public long getTotalLikes() {
+        return totalLikes;
+    }
+
+    public void setTotalLikes(long totalLikes) {
+        this.totalLikes = totalLikes;
+    }
+
     public List<Image> getImages() {
         return images;
     }

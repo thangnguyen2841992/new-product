@@ -19,7 +19,16 @@ public class PostRequest {
     private Long topicPostId;
     private String topicPostName;
     private Date dateCreated;
+    private long totalLikes;
     private ImageRequest[] imageList;
+
+    public long getTotalLikes() {
+        return totalLikes;
+    }
+
+    public void setTotalLikes(long totalLikes) {
+        this.totalLikes = totalLikes;
+    }
 
     public String getStatusPostName() {
         return statusPostName;

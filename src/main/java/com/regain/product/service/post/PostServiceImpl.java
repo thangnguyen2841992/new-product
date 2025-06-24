@@ -2,10 +2,8 @@ package com.regain.product.service.post;
 
 import com.regain.product.client.AccountService;
 import com.regain.product.model.*;
-import com.regain.product.repository.IPostRepository;
-import com.regain.product.repository.IStatusRepository;
-import com.regain.product.repository.ITopicPostRepository;
-import com.regain.product.repository.ImageRepository;
+import com.regain.product.repository.*;
+import com.regain.product.service.likePost.ILikePostService;
 import com.regain.product.service.status.IStatusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PostServiceImpl implements IPostService {
@@ -22,6 +21,9 @@ public class PostServiceImpl implements IPostService {
 
     @Autowired
     private AccountService accountService;
+
+    @Autowired
+    private ILikePostService likePostService;
 
     @Autowired
     private IStatusRepository statusRepository;
@@ -57,6 +59,8 @@ public class PostServiceImpl implements IPostService {
             postDTO.setTopicPostName(topicPost.getName());
             List<Image> images = this.imageRepository.findByPostId(post.getPostId());
             postDTO.setImages(images);
+            long totalLikes = this.likePostService.countLikesByPostId(post.getPostId());
+            postDTO.setTotalLikes(totalLikes);
             postDTOs.add(postDTO);
         }
         return postDTOs;
@@ -66,6 +70,11 @@ public class PostServiceImpl implements IPostService {
     public List<PostDTO> getAllPostsOfOtherUser(Long accountId) {
         List<Post> posts = this.postRepository.findAllPostOfOtherUser(accountId);
         return mappingListPostToPostDTO(posts);
+    }
+
+    @Override
+    public Optional<Post> findPostById(Long id) {
+        return this.postRepository.findById(id);
     }
 
     @Override
