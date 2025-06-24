@@ -102,7 +102,7 @@ public class WebsocketController {
                             newNotification.setType(1);
                             AccountDTO accountDTO = this.accountService.findAccountByAccountId(newLikePost.getAccountId()).getBody();
                             assert accountDTO != null;
-                            newNotification.setContent(accountDTO.getFullName() + " đã thích bài viết của bạn!");
+                            newNotification.setContent(" đã thích bài viết của bạn!");
                             Notification newSaveNotification = this.notificationService.save(newNotification);
                             simpMessagingTemplate.convertAndSend("/topic/notification", newSaveNotification);
                         }
