@@ -18,6 +18,7 @@ public class LikeComment {
     private Long likeCommentId;
 
     private Long accountId;
+    private Long accountCommentId;
 
     private Long commentId;
 
@@ -25,6 +26,14 @@ public class LikeComment {
 
     private Date dateCreated;
     private long totalLikes;
+
+    public Long getAccountCommentId() {
+        return accountCommentId;
+    }
+
+    public void setAccountCommentId(Long accountCommentId) {
+        this.accountCommentId = accountCommentId;
+    }
 
     public long getTotalLikes() {return totalLikes;}
 

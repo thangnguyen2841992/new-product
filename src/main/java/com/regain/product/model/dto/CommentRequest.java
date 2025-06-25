@@ -13,6 +13,7 @@ public class CommentRequest {
     private Long postId;
 
     private Long accountId;
+    private Long postAccountId;
 
     private String content;
 
@@ -21,6 +22,14 @@ public class CommentRequest {
     private String avatar;
 
     private long totalLikeComments;
+
+    public Long getPostAccountId() {
+        return postAccountId;
+    }
+
+    public void setPostAccountId(Long postAccountId) {
+        this.postAccountId = postAccountId;
+    }
 
     public long getTotalLikeComments() {return totalLikeComments;}
 

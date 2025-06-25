@@ -2,10 +2,7 @@ package com.regain.product.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.regain.product.client.AccountService;
-import com.regain.product.model.dto.AccountDTO;
-import com.regain.product.model.dto.CommentRequest;
-import com.regain.product.model.dto.PostDTO;
-import com.regain.product.model.dto.PostRequest;
+import com.regain.product.model.dto.*;
 import com.regain.product.model.entity.*;
 import com.regain.product.service.comment.ICommentService;
 import com.regain.product.service.image.ImageService;
@@ -14,6 +11,7 @@ import com.regain.product.service.likePost.ILikePostService;
 import com.regain.product.service.notification.INotificationService;
 import com.regain.product.service.post.IPostService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -51,6 +49,9 @@ public class WebsocketController {
 
     @Autowired
     private ILikeCommentService likeCommentService;
+
+    @Autowired
+    KafkaTemplate<String, Object> kafkaTemplate;
 
 
     @MessageMapping("/message")
@@ -116,6 +117,14 @@ public class WebsocketController {
                             newNotification.setContent(" đã thích bài viết của bạn!");
                             Notification newSaveNotification = this.notificationService.save(newNotification);
                             simpMessagingTemplate.convertAndSend("/topic/notification", newSaveNotification);
+                            AccountDTO accountDTOSendEmail = this.accountService.findAccountByAccountId(post.get().getUserId()).getBody();
+                            MessageNotification messageNotification = new MessageNotification();
+                            messageNotification.setFrom("nguyenthang29tbdl@gmail.com");
+                            assert accountDTOSendEmail != null;
+                            messageNotification.setTo(accountDTOSendEmail.getEmail());
+                            messageNotification.setToName(accountDTOSendEmail.getFullName());
+                            messageNotification.setContent(accountDTO.getFullName() + " đã thích bài viết" + post.get().getTitle()+ " của bạn!");
+                            kafkaTemplate.send("send-email-notification", messageNotification);
                         }
                     }
                 }
@@ -144,18 +153,21 @@ public class WebsocketController {
             assert accountDTO != null;
             newCommentRequest.setFullName(accountDTO.getFullName());
             newCommentRequest.setAvatar(accountDTO.getAvatar());
-            Notification notification = new Notification();
-            notification.setPostId(newCommentSave.getPostId());
-            notification.setFormAccountId(newCommentSave.getAccountId());
-            Optional<Post> postDTO = this.postService.findPostById(newCommentSave.getPostId());
-            postDTO.ifPresent(post -> notification.setToAccountId(post.getUserId()));
-            notification.setType(2);
-            notification.setRead(false);
-            notification.setDateCreated(new Date());
-            notification.setContent(" đã bình luận ở bài viết của bạn!");
-            Notification notificationSave = this.notificationService.save(notification);
             simpMessagingTemplate.convertAndSend("/topic/comment", newCommentRequest);
-            simpMessagingTemplate.convertAndSend("/topic/notification", notificationSave);
+            if (!Objects.equals(newCommentRequest.getPostAccountId(), newCommentRequest.getAccountId())) {
+                Notification notification = new Notification();
+                notification.setPostId(newCommentSave.getPostId());
+                notification.setFormAccountId(newCommentSave.getAccountId());
+                Optional<Post> postDTO = this.postService.findPostById(newCommentSave.getPostId());
+                postDTO.ifPresent(post -> notification.setToAccountId(post.getUserId()));
+                notification.setType(2);
+                notification.setRead(false);
+                notification.setDateCreated(new Date());
+                notification.setContent(" đã bình luận ở bài viết của bạn!");
+                Notification notificationSave = this.notificationService.save(notification);
+                simpMessagingTemplate.convertAndSend("/topic/notification", notificationSave);
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -174,32 +186,29 @@ public class WebsocketController {
                 LikeComment newLikeCommentSave = this.likeCommentService.save(newLikeComment);
                 long totalLikeComment = this.likeCommentService.countLikesByPostId(newLikeComment.getCommentId());
                 newLikeCommentSave.setTotalLikes(totalLikeComment);
-                Optional<Comment> commentOptional = this.commentService.findCommentById(newLikeCommentSave.getCommentId());
-                if (commentOptional.isPresent()) {
-                    if (!Objects.equals(commentOptional.get().getAccountId(), newLikeComment.getAccountId())) {
-                        Optional<Notification> notificationOptional = this.notificationService.findByTypeIdAndCommentIdIdAndUserId(newLikeComment.getAccountId(), commentOptional.get().getCommentId(), 3);
+                simpMessagingTemplate.convertAndSend("/topic/likeComment", newLikeCommentSave);
+                    if (!Objects.equals(newLikeComment.getAccountCommentId(), newLikeComment.getAccountId())) {
+                        Optional<Notification> notificationOptional = this.notificationService.findByTypeIdAndCommentIdIdAndUserId(newLikeComment.getAccountId(), newLikeComment.getCommentId(), 3);
                         if (notificationOptional.isEmpty()) {
                             Notification newNotification = new Notification();
                             newNotification.setFormAccountId(newLikeComment.getAccountId());
-                            newNotification.setToAccountId(commentOptional.get().getAccountId());
+                            newNotification.setToAccountId(newLikeComment.getAccountCommentId());
                             newNotification.setRead(false);
-                            newNotification.setCommentId(commentOptional.get().getCommentId());
+                            newNotification.setCommentId(newLikeComment.getCommentId());
                             newNotification.setDateCreated(new Date());
-                            newNotification.setPostId(commentOptional.get().getPostId());
+                            newNotification.setPostId(newLikeComment.getPostId());
                             newNotification.setType(3);
                             newNotification.setContent(" đã thích bình luận của bạn!");
                             Notification newSaveNotification = this.notificationService.save(newNotification);
-                            simpMessagingTemplate.convertAndSend("/topic/likeComment", newLikeCommentSave);
                             simpMessagingTemplate.convertAndSend("/topic/notification", newSaveNotification);
                         }
                     }
-                }
             } else {
                 this.likeCommentService.deleteLikeComment(checkExistLikeComment.get().getLikeCommentId());
                 long totalLikeComment = this.likeCommentService.countLikesByPostId(newLikeComment.getCommentId());
                 LikeComment newSaveLikeComment = new LikeComment();
                 newSaveLikeComment.setPostId(newLikeComment.getPostId());
-                newSaveLikeComment.setPostId(newLikeComment.getCommentId());
+                newSaveLikeComment.setCommentId(newLikeComment.getCommentId());
                 newSaveLikeComment.setTotalLikes(totalLikeComment);
                 simpMessagingTemplate.convertAndSend("/topic/likeComment", newSaveLikeComment);
             }
