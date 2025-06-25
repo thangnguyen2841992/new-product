@@ -1,6 +1,6 @@
 package com.regain.product.service.notification;
 
-import com.regain.product.model.Notification;
+import com.regain.product.model.entity.Notification;
 import com.regain.product.repository.INotificationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,5 +27,10 @@ public class NotificationServiceImpl implements INotificationService{
     @Override
     public Optional<Notification> findByTypeIdAndPostIdAndUserId(Long formAccountId, Long toAccountId, long type) {
         return this.notificationRepository.findByTypeIdAndPostIdAndUserId(formAccountId, toAccountId, type);
+    }
+
+    @Override
+    public Optional<Notification> findByTypeIdAndCommentIdIdAndUserId(Long formAccountId, Long commentId, long type) {
+        return this.notificationRepository.findByTypeIdAndCommentIdIdAndUserId(formAccountId, commentId, type);
     }
 }

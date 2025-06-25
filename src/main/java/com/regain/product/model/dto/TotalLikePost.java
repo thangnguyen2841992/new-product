@@ -1,4 +1,4 @@
-package com.regain.product.model;
+package com.regain.product.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;

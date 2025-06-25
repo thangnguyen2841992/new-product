@@ -1,6 +1,6 @@
 package com.regain.product.controller;
 
-import com.regain.product.model.Image;
+import com.regain.product.model.entity.Image;
 import com.regain.product.service.image.ImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

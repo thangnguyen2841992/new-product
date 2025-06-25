@@ -1,12 +1,14 @@
 package com.regain.product.service.post;
 
 import com.regain.product.client.AccountService;
-import com.regain.product.model.*;
+import com.regain.product.model.dto.AccountDTO;
+import com.regain.product.model.dto.CommentRequest;
+import com.regain.product.model.dto.PostDTO;
+import com.regain.product.model.entity.*;
 import com.regain.product.repository.*;
+import com.regain.product.service.comment.ICommentService;
 import com.regain.product.service.likePost.ILikePostService;
-import com.regain.product.service.status.IStatusService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -33,6 +35,9 @@ public class PostServiceImpl implements IPostService {
 
     @Autowired
     private ImageRepository imageRepository;
+
+    @Autowired
+    private ICommentService commentService;
 
     @Override
     public List<PostDTO> getAllPostsOfUser(Long accountId) {
@@ -61,6 +66,8 @@ public class PostServiceImpl implements IPostService {
             postDTO.setImages(images);
             long totalLikes = this.likePostService.countLikesByPostId(post.getPostId());
             postDTO.setTotalLikes(totalLikes);
+            List<CommentRequest> comments = this.commentService.findAllCommentByPostId(post.getPostId());
+            postDTO.setCommentList(comments);
             postDTOs.add(postDTO);
         }
         return postDTOs;

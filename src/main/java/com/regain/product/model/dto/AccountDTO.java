@@ -1,4 +1,4 @@
-package com.regain.product.model;
+package com.regain.product.model.dto;
 
 public class AccountDTO {
     private Long id;

@@ -1,6 +1,6 @@
 package com.regain.product.service.topicPost;
 
-import com.regain.product.model.TopicPost;
+import com.regain.product.model.entity.TopicPost;
 import com.regain.product.repository.ITopicPostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

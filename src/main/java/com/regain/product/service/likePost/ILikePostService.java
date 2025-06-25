@@ -1,7 +1,6 @@
 package com.regain.product.service.likePost;
 
-import com.regain.product.model.LikePost;
-import org.springframework.data.repository.query.Param;
+import com.regain.product.model.entity.LikePost;
 
 import java.util.Optional;
 

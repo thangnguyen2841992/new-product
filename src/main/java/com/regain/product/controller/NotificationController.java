@@ -1,6 +1,6 @@
 package com.regain.product.controller;
 
-import com.regain.product.model.Notification;
+import com.regain.product.model.entity.Notification;
 import com.regain.product.service.notification.INotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

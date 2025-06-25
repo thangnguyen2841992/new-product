@@ -1,4 +1,4 @@
-package com.regain.product.model;
+package com.regain.product.model.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

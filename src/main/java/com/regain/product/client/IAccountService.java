@@ -1,6 +1,6 @@
 package com.regain.product.client;
 
-import com.regain.product.model.AccountDTO;
+import com.regain.product.model.dto.AccountDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;

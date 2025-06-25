@@ -1,6 +1,6 @@
 package com.regain.product.service.image;
 
-import com.regain.product.model.Image;
+import com.regain.product.model.entity.Image;
 
 import java.util.List;
 

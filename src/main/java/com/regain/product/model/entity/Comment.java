@@ -1,4 +1,4 @@
-package com.regain.product.model;
+package com.regain.product.model.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -12,33 +12,25 @@ import java.util.Date;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-public class LikePost {
+public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long likeCommentId;
+    private Long commentId;
 
     private Long postId;
 
     private Long accountId;
 
+    private String content;
+
     private Date dateCreated;
 
-    private long totalLikes;
-
-    public long getTotalLikes() {
-        return totalLikes;
+    public Long getCommentId() {
+        return commentId;
     }
 
-    public void setTotalLikes(long totalLikes) {
-        this.totalLikes = totalLikes;
-    }
-
-    public Long getLikeCommentId() {
-        return likeCommentId;
-    }
-
-    public void setLikeCommentId(Long likeCommentId) {
-        this.likeCommentId = likeCommentId;
+    public void setCommentId(Long commentId) {
+        this.commentId = commentId;
     }
 
     public Long getPostId() {
@@ -55,6 +47,14 @@ public class LikePost {
 
     public void setAccountId(Long accountId) {
         this.accountId = accountId;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public Date getDateCreated() {

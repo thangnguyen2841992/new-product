@@ -1,7 +1,6 @@
 package com.regain.product.controller;
 
-import com.regain.product.model.Post;
-import com.regain.product.model.PostDTO;
+import com.regain.product.model.dto.PostDTO;
 import com.regain.product.service.post.IPostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

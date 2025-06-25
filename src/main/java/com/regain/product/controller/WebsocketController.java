@@ -2,8 +2,14 @@ package com.regain.product.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.regain.product.client.AccountService;
-import com.regain.product.model.*;
+import com.regain.product.model.dto.AccountDTO;
+import com.regain.product.model.dto.CommentRequest;
+import com.regain.product.model.dto.PostDTO;
+import com.regain.product.model.dto.PostRequest;
+import com.regain.product.model.entity.*;
+import com.regain.product.service.comment.ICommentService;
 import com.regain.product.service.image.ImageService;
+import com.regain.product.service.likeComment.ILikeCommentService;
 import com.regain.product.service.likePost.ILikePostService;
 import com.regain.product.service.notification.INotificationService;
 import com.regain.product.service.post.IPostService;
@@ -40,6 +46,12 @@ public class WebsocketController {
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
 
+    @Autowired
+    private ICommentService commentService;
+
+    @Autowired
+    private ILikeCommentService likeCommentService;
+
 
     @MessageMapping("/message")
     @SendTo("/topic/posts")
@@ -75,7 +87,6 @@ public class WebsocketController {
     }
 
     @MessageMapping("/likePost")
-//    @SendTo("/topic/likePost")
     public void sendLikePost(@Payload String message) {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
@@ -120,6 +131,84 @@ public class WebsocketController {
             e.printStackTrace();
         }
     }
+    @MessageMapping("/commentPost")
+    public void sendCommentPost(@Payload String message) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            // Chuyển đổi chuỗi JSON thành đối tượng Java
+            CommentRequest newCommentRequest = objectMapper.readValue(message, CommentRequest.class);
+            Comment newCommentSave = this.commentService.saveComment(newCommentRequest);
+            newCommentRequest.setDateCreated(newCommentSave.getDateCreated());
+            newCommentRequest.setCommentId(newCommentSave.getCommentId());
+            AccountDTO accountDTO = this.accountService.findAccountByAccountId(newCommentRequest.getAccountId()).getBody();
+            assert accountDTO != null;
+            newCommentRequest.setFullName(accountDTO.getFullName());
+            newCommentRequest.setAvatar(accountDTO.getAvatar());
+            Notification notification = new Notification();
+            notification.setPostId(newCommentSave.getPostId());
+            notification.setFormAccountId(newCommentSave.getAccountId());
+            Optional<Post> postDTO = this.postService.findPostById(newCommentSave.getPostId());
+            postDTO.ifPresent(post -> notification.setToAccountId(post.getUserId()));
+            notification.setType(2);
+            notification.setRead(false);
+            notification.setDateCreated(new Date());
+            notification.setContent(" đã bình luận ở bài viết của bạn!");
+            Notification notificationSave = this.notificationService.save(notification);
+            simpMessagingTemplate.convertAndSend("/topic/comment", newCommentRequest);
+            simpMessagingTemplate.convertAndSend("/topic/notification", notificationSave);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @MessageMapping("/likeComment")
+    public void sendLikeComment(@Payload String message) {
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        try {
+            // Chuyển đổi chuỗi JSON thành đối tượng Java
+            LikeComment newLikeComment = objectMapper.readValue(message, LikeComment.class);
+            Optional<LikeComment> checkExistLikeComment = this.likeCommentService.findByCommentIdAndAccountId(newLikeComment.getCommentId(), newLikeComment.getAccountId());
+            if (checkExistLikeComment.isEmpty()) {
+                newLikeComment.setDateCreated(new Date());
+                LikeComment newLikeCommentSave = this.likeCommentService.save(newLikeComment);
+                long totalLikeComment = this.likeCommentService.countLikesByPostId(newLikeComment.getCommentId());
+                newLikeCommentSave.setTotalLikes(totalLikeComment);
+                Optional<Comment> commentOptional = this.commentService.findCommentById(newLikeCommentSave.getCommentId());
+                if (commentOptional.isPresent()) {
+                    if (!Objects.equals(commentOptional.get().getAccountId(), newLikeComment.getAccountId())) {
+                        Optional<Notification> notificationOptional = this.notificationService.findByTypeIdAndCommentIdIdAndUserId(newLikeComment.getAccountId(), commentOptional.get().getCommentId(), 3);
+                        if (notificationOptional.isEmpty()) {
+                            Notification newNotification = new Notification();
+                            newNotification.setFormAccountId(newLikeComment.getAccountId());
+                            newNotification.setToAccountId(commentOptional.get().getAccountId());
+                            newNotification.setRead(false);
+                            newNotification.setCommentId(commentOptional.get().getCommentId());
+                            newNotification.setDateCreated(new Date());
+                            newNotification.setPostId(commentOptional.get().getPostId());
+                            newNotification.setType(3);
+                            newNotification.setContent(" đã thích bình luận của bạn!");
+                            Notification newSaveNotification = this.notificationService.save(newNotification);
+                            simpMessagingTemplate.convertAndSend("/topic/likeComment", newLikeCommentSave);
+                            simpMessagingTemplate.convertAndSend("/topic/notification", newSaveNotification);
+                        }
+                    }
+                }
+            } else {
+                this.likeCommentService.deleteLikeComment(checkExistLikeComment.get().getLikeCommentId());
+                long totalLikeComment = this.likeCommentService.countLikesByPostId(newLikeComment.getCommentId());
+                LikeComment newSaveLikeComment = new LikeComment();
+                newSaveLikeComment.setPostId(newLikeComment.getPostId());
+                newSaveLikeComment.setPostId(newLikeComment.getCommentId());
+                newSaveLikeComment.setTotalLikes(totalLikeComment);
+                simpMessagingTemplate.convertAndSend("/topic/likeComment", newSaveLikeComment);
+            }
+
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     @ExceptionHandler(Exception.class)
     @SendTo("/topic/errors")

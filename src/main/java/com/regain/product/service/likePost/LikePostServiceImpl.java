@@ -1,6 +1,6 @@
 package com.regain.product.service.likePost;
 
-import com.regain.product.model.LikePost;
+import com.regain.product.model.entity.LikePost;
 import com.regain.product.repository.ILikePostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

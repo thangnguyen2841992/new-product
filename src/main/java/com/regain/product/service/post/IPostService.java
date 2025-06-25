@@ -1,7 +1,7 @@
 package com.regain.product.service.post;
 
-import com.regain.product.model.Post;
-import com.regain.product.model.PostDTO;
+import com.regain.product.model.entity.Post;
+import com.regain.product.model.dto.PostDTO;
 
 import java.util.List;
 import java.util.Optional;

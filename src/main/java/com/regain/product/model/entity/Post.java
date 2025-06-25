@@ -1,11 +1,10 @@
-package com.regain.product.model;
+package com.regain.product.model.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.security.auth.login.AccountException;
 import java.util.Date;
 
 @Entity

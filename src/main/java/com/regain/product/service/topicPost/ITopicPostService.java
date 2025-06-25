@@ -1,6 +1,6 @@
 package com.regain.product.service.topicPost;
 
-import com.regain.product.model.TopicPost;
+import com.regain.product.model.entity.TopicPost;
 
 import java.util.List;
 
