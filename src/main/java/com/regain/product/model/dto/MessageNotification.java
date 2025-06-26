@@ -9,8 +9,38 @@ public class MessageNotification {
     private String from;
     private String to;
     private String toName;
+    private String formName;
+    private String postTitle;
+    private Long postId;
+    private Long formUserId;
+    private int typeNotification;
     private String subject;
     private String content;
+
+
+    public int getTypeNotification() {return typeNotification;}
+
+    public void setTypeNotification(int typeNotification) {this.typeNotification = typeNotification;}
+
+    public Long getPostId() {return postId;}
+
+    public void setPostId(Long postId) {this.postId = postId;}
+
+    public Long getFormUserId() {
+        return formUserId;
+    }
+
+    public void setFormUserId(Long formUserId) {
+        this.formUserId = formUserId;
+    }
+
+    public String getPostTitle() {return postTitle;}
+
+    public void setPostTitle(String postTitle) {this.postTitle = postTitle;}
+
+    public String getFormName() {return formName;}
+
+    public void setFormName(String formName) {this.formName = formName;}
 
     public String getFrom() {
         return from;

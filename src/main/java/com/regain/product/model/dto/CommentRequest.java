@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -23,13 +24,15 @@ public class CommentRequest {
 
     private long totalLikeComments;
 
-    public Long getPostAccountId() {
-        return postAccountId;
-    }
+    private List<ReplyRequest> listReplyComments;
 
-    public void setPostAccountId(Long postAccountId) {
-        this.postAccountId = postAccountId;
-    }
+    public List<ReplyRequest> getListReplyComments() {return listReplyComments;}
+
+    public void setListReplyComments(List<ReplyRequest> listReplyComments) {this.listReplyComments = listReplyComments;}
+
+    public Long getPostAccountId() {return postAccountId;}
+
+    public void setPostAccountId(Long postAccountId) {this.postAccountId = postAccountId;}
 
     public long getTotalLikeComments() {return totalLikeComments;}
 
