@@ -20,6 +20,7 @@ public class PostDTO {
     private Date dateCreated;
 
     private Long topicPostId;
+    private Long userId;
 
     private String topicPostName;
 
@@ -38,6 +39,10 @@ public class PostDTO {
     private long totalNotificationUnread;
 
     private List<CommentRequest> commentList;
+
+    public Long getUserId() {return userId;}
+
+    public void setUserId(Long userId) {this.userId = userId;}
 
     public List<CommentRequest> getCommentList() {return commentList;}
 

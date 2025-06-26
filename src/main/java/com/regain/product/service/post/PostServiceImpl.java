@@ -58,6 +58,7 @@ public class PostServiceImpl implements IPostService {
             postDTO.setAvatar(accountDTO.getAvatar());
             postDTO.setFullName(accountDTO.getFullName());
             postDTO.setDateCreated(post.getDateCreated());
+            postDTO.setUserId(accountDTO.getId());
             Status status = statusRepository.findById(post.getStatusId()).orElseThrow(() -> new RuntimeException("Status Not Found " + post.getStatusId()));
             postDTO.setStatusPostName(status.getStatusName());
             TopicPost topicPost = topicPostRepository.findById(post.getTopicPostId()).orElseThrow(() -> new RuntimeException("TopicPost Not Found " + post.getTopicPostId()));

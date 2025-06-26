@@ -20,7 +20,7 @@ public class ChatRequest {
 
     private String message;
 
-    private Date dateCreated;
+    private String dateCreated;
 
     public Long getChatId() {
         return chatId;
@@ -86,11 +86,11 @@ public class ChatRequest {
         this.message = message;
     }
 
-    public Date getDateCreated() {
+    public String getDateCreated() {
         return dateCreated;
     }
 
-    public void setDateCreated(Date dateCreated) {
+    public void setDateCreated(String dateCreated) {
         this.dateCreated = dateCreated;
     }
 }
