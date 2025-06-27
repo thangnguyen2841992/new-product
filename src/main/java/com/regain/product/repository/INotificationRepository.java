@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @Repository
 public interface INotificationRepository extends JpaRepository<Notification, Long> {
-    @Query(value = "SELECT * FROM notification WHERE to_account_id = :accountId and is_read = false", nativeQuery = true)
+    @Query(value = "SELECT * FROM notification WHERE to_account_id = :accountId and is_read = false order by date_created desc", nativeQuery = true)
     List<Notification> getAllNotificationUnreadOfUser(@Param("accountId") Long accountId);
 
     @Query(value = "select * from notification where form_account_id = :fromAccountId and post_id = :postId and type = :type ", nativeQuery = true)

@@ -13,5 +13,8 @@ public interface INotificationService {
     Optional<Notification> findByTypeIdAndPostIdAndUserId(Long formAccountId, Long toAccountId, long type);
     Optional<Notification> findByTypeIdAndCommentIdIdAndUserId(Long formAccountId, Long commentId, long type);
 
+    Optional<Notification> findById(Long id);
+
+    void deleteById(Long id);
 
 }

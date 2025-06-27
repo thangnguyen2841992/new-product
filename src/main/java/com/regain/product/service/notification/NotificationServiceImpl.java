@@ -33,4 +33,14 @@ public class NotificationServiceImpl implements INotificationService{
     public Optional<Notification> findByTypeIdAndCommentIdIdAndUserId(Long formAccountId, Long commentId, long type) {
         return this.notificationRepository.findByTypeIdAndCommentIdIdAndUserId(formAccountId, commentId, type);
     }
+
+    @Override
+    public Optional<Notification> findById(Long id) {
+        return this.notificationRepository.findById(id);
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        this.notificationRepository.deleteById(id);
+    }
 }
