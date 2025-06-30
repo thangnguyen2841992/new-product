@@ -38,4 +38,9 @@ public class FriendService implements IFriendService {
     public void delete(Long id) {
         this.friendRepository.deleteById(id);
     }
+
+    @Override
+    public Optional<Friend> checkStatusFriend(Long formUserId, Long toUserId) {
+        return this.friendRepository.findFriendByFormUserAndToUserId(formUserId, toUserId);
+    }
 }

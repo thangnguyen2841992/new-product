@@ -16,4 +16,6 @@ public interface IFriendService {
 
     void delete(Long id);
 
+    Optional<Friend> checkStatusFriend(Long formUserId, Long toUserId);
+
 }

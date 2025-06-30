@@ -14,6 +14,9 @@ public interface IFriendRepository extends JpaRepository<Friend, Long> {
     @Query(value = "select * from friend where (form_user_id = :formUserId and to_user_id = :toUserId) or (form_user_id = :toUserId and to_user_id = :formUserId) ", nativeQuery = true)
     Optional<Friend> findFriendByFormUserAndToUserId(@Param("formUserId") Long formUserId, @Param("toUserId") Long toUserId);
 
+    @Query(value = "select  from friend where (form_user_id = :formUserId and to_user_id = :toUserId) or (form_user_id = :toUserId and to_user_id = :formUserId)", nativeQuery = true)
+    Optional<Friend> checkStatusFriend(@Param("formUserId") Long formUserId, @Param("toUserId") Long toUserId);
+
 
 
 

@@ -14,11 +14,15 @@ import com.regain.product.service.chat.IChatService;
 import com.regain.product.service.friend.IFriendService;
 import com.regain.product.service.notification.INotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
@@ -44,6 +48,13 @@ public class FriendController {
 
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
+
+    @GetMapping("/friend-api/checkStatusFriend")
+    public ResponseEntity<Friend> checkStatusFriend(@RequestParam(name = "formUserId") Long formUserId, @RequestParam(name = "toUserId") Long toUserId) {
+        Optional<Friend> friend = this.friendService.checkStatusFriend(formUserId, toUserId);
+        return friend.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(new Friend(), HttpStatus.OK));
+    }
+
     @MessageMapping("/friend")
     public void sendMessage(@Payload String message) {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -83,7 +94,7 @@ public class FriendController {
             Optional<Friend> friendOptional = this.friendService.findFriendByFormUserAndToUserId(newApprovalRequest.getFormUserId(), newApprovalRequest.getToUserId());
             if (friendOptional.isPresent()) {
                 Friend friend = friendOptional.get();
-                if (newApprovalRequest.getIsAccepted() == 1 ) {
+                if (newApprovalRequest.getIsAccepted() == 1) {
                     friend.setApproved(true);
                     friend.setDateApproved(new Date());
                     this.friendService.save(friend);
@@ -93,7 +104,7 @@ public class FriendController {
                 Optional<Notification> notification = this.notificationService.findById(newApprovalRequest.getNotificationId());
                 assert notification.isPresent();
                 this.notificationService.deleteById(notification.get().getNotificationId());
-                if (newApprovalRequest.getIsAccepted() == 1 ) {
+                if (newApprovalRequest.getIsAccepted() == 1) {
                     Notification newNotification = new Notification();
                     newNotification.setFormAccountId(newApprovalRequest.getFormUserId());
                     newNotification.setToAccountId(newApprovalRequest.getToUserId());
